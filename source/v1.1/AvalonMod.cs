@@ -20,7 +20,7 @@ using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SheriffMod
+namespace AvalonMod
 {
 
 
@@ -29,8 +29,8 @@ namespace SheriffMod
 
 
 
-    [BepInPlugin("org.bepinex.plugins.SheriffMod", "Sheriff Mod", "1.1.0.0")]
-    public class SheriffMod : BasePlugin
+    [BepInPlugin("org.bepinex.plugins.AvalonMod", "Avalon Mod", "1.0.0.0")]
+    public class AvalonMod : BasePlugin
     {
         public static BepInEx.Logging.ManualLogSource log;
         private readonly Harmony harmony;
@@ -39,15 +39,15 @@ namespace SheriffMod
         public ConfigEntry<ushort> Port { get; set; }
 
 
-        public SheriffMod()
+        public AvalonMod()
         {
             log = Log;
-            this.harmony = new Harmony("Sheriff Mod");
+            this.harmony = new Harmony("Avalon Mod");
 
         }
         public override void Load()
         {
-            log.LogMessage("Sheriff Mod loaded");
+            log.LogMessage("Avalon Mod loaded");
 
             Name = Config.Bind("Custom", "Name", "Custom");
             Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
