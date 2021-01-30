@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SheriffMod
+namespace AvalonMod
 {
     [HarmonyPatch]
     public static class KillButtonPatch
@@ -17,27 +17,17 @@ namespace SheriffMod
         [HarmonyPatch(typeof(MLPJGKEACMM), "PerformKill")]
         static bool Prefix(MethodBase __originalMethod)
         {
-            if (PlayerControlPatch.isSheriff(FFGALNAPKCD.LocalPlayer))
+            if (PlayerControlPatch.isOberon(FFGALNAPKCD.LocalPlayer))
             {
-                if (PlayerControlPatch.SheriffKillTimer() == 0)
+                if (PlayerControlPatch.OberonKillTimer() == 0)
                 {
                     var dist = PlayerControlPatch.getDistBetweenPlayers(FFGALNAPKCD.LocalPlayer, PlayerControlPatch.closestPlayer);
                     if (dist < KMOGFLPJLLK.JMLGACIOLIK[FFGALNAPKCD.GameOptions.DLIBONBKPKL])
                     {
-
-
-                        if (PlayerControlPatch.closestPlayer.NDGFFHMFGIG.DAPKNDBLKIA == false)
+                        // Verify that the player to be killed is a crewmate.
+                        if (!PlayerControlPatch.closestPlayer.NDGFFHMFGIG.DAPKNDBLKIA)
                         {
-                            MessageWriter writer = FMLLKEACGIO.Instance.StartRpcImmediately(FFGALNAPKCD.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.None, -1);
-                            writer.Write(FFGALNAPKCD.LocalPlayer.PlayerId);
-                            writer.Write(FFGALNAPKCD.LocalPlayer.PlayerId);
-                            FMLLKEACGIO.Instance.FinishRpcImmediately(writer);
-                            FFGALNAPKCD.LocalPlayer.MurderPlayer(FFGALNAPKCD.LocalPlayer);
-
-                        }
-                        else
-                        {
-                            MessageWriter writer = FMLLKEACGIO.Instance.StartRpcImmediately(FFGALNAPKCD.LocalPlayer.NetId, (byte)CustomRPC.SheriffKill, Hazel.SendOption.None, -1);
+                            MessageWriter writer = FMLLKEACGIO.Instance.StartRpcImmediately(FFGALNAPKCD.LocalPlayer.NetId, (byte)CustomRPC.OberonKill, Hazel.SendOption.None, -1);
                             writer.Write(FFGALNAPKCD.LocalPlayer.PlayerId);
                             writer.Write(PlayerControlPatch.closestPlayer.PlayerId);
                             FMLLKEACGIO.Instance.FinishRpcImmediately(writer);

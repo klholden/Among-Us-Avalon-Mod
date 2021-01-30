@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-namespace SheriffMod
+namespace AvalonMod
 {
     [HarmonyPatch]
     public static class HudManagerPatch
@@ -36,11 +36,11 @@ namespace SheriffMod
             }
             if (GameSettingsText != null)
             {
-                if (CustomGameOptions.showSheriff)
-                    __instance.GameSettings.Text = GameSettingsText + "Show Sheriff: On" + "\n";
+                if (CustomGameOptions.showOberon)
+                    __instance.GameSettings.Text = GameSettingsText + "Show Oberon: On" + "\n";
                 else
-                    __instance.GameSettings.Text = GameSettingsText + "Show Sheriff: Off" + "\n";
-                __instance.GameSettings.Text += "Sheriff Kill Cooldown: " + CustomGameOptions.SheriffKillCD.ToString() + "s";
+                    __instance.GameSettings.Text = GameSettingsText + "Show Oberon: Off" + "\n";
+                __instance.GameSettings.Text += "Oberon Kill Cooldown: " + CustomGameOptions.OberonKillCD.ToString() + "s";
             }
 
         }
@@ -63,9 +63,9 @@ namespace SheriffMod
             foreach (HDJGDMFCHDN HDJGDMFCHDN in __instance.HBDFFAHBIGI)
             {
 
-                if (HDJGDMFCHDN.NameText.Text == PlayerControlPatch.Sheriff.name)
+                if (HDJGDMFCHDN.NameText.Text == PlayerControlPatch.Oberon.name)
                 {
-                    if (CustomGameOptions.showSheriff | PlayerControlPatch.isSheriff(FFGALNAPKCD.LocalPlayer))
+                    if (CustomGameOptions.showOberon | PlayerControlPatch.isOberon(FFGALNAPKCD.LocalPlayer))
                     {
                         HDJGDMFCHDN.NameText.Color = new Color(1, (float)(204.0 / 255.0), 0, 1);
 
@@ -86,10 +86,10 @@ namespace SheriffMod
 
             UpdateGameSettingsText(__instance);
       
-            if (FFGALNAPKCD.AllPlayerControls.Count > 1 & PlayerControlPatch.Sheriff != null)
+            if (FFGALNAPKCD.AllPlayerControls.Count > 1 & PlayerControlPatch.Oberon != null)
             {
 
-                if (PlayerControlPatch.isSheriff(FFGALNAPKCD.LocalPlayer))
+                if (PlayerControlPatch.isOberon(FFGALNAPKCD.LocalPlayer))
                 {
 
                     FFGALNAPKCD.LocalPlayer.nameText.Color = new Color(1, (float)(204.0 / 255.0), 0, 1);
@@ -101,7 +101,7 @@ namespace SheriffMod
                     else {
                         KillButton.gameObject.SetActive(true);
                         KillButton.isActive = true;
-                        KillButton.SetCoolDown(PlayerControlPatch.SheriffKillTimer(), FFGALNAPKCD.GameOptions.IGHCIKIDAMO + 15.0f);
+                        KillButton.SetCoolDown(PlayerControlPatch.OberonKillTimer(), FFGALNAPKCD.GameOptions.IGHCIKIDAMO + 15.0f);
                         PlayerControlPatch.closestPlayer = PlayerControlPatch.getClosestPlayer(FFGALNAPKCD.LocalPlayer);
                         double dist = PlayerControlPatch.getDistBetweenPlayers(FFGALNAPKCD.LocalPlayer, PlayerControlPatch.closestPlayer);
                         if (dist < KMOGFLPJLLK.JMLGACIOLIK[FFGALNAPKCD.GameOptions.DLIBONBKPKL])
@@ -143,11 +143,11 @@ namespace SheriffMod
           
             
           
-            if (GameOptionMenuPatch.showSheriffOption != null && GameOptionMenuPatch.SheriffCooldown!=null)
+            if (GameOptionMenuPatch.showOberonOption != null && GameOptionMenuPatch.OberonCooldown!=null)
             {
                 var isOptionsMenuActive = GameObject.FindObjectsOfType<PHCKLDDNJNP>().Count != 0;
-                GameOptionMenuPatch.showSheriffOption.gameObject.SetActive(isOptionsMenuActive);
-                GameOptionMenuPatch.SheriffCooldown.gameObject.SetActive(isOptionsMenuActive);
+                GameOptionMenuPatch.showOberonOption.gameObject.SetActive(isOptionsMenuActive);
+                GameOptionMenuPatch.OberonCooldown.gameObject.SetActive(isOptionsMenuActive);
 
             }
 

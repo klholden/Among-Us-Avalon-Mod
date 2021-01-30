@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-namespace SheriffMod
+namespace AvalonMod
 {
     public class Player
     {
         public FFGALNAPKCD playerdata;
-        public bool isSheriff;
+        public bool isOberon;
 
         public Player(FFGALNAPKCD playerdata)
         {
             this.playerdata = playerdata;
-            isSheriff = false;
+            isOberon = false;
 
 
         }
         public void Update()
         {
-            if (isSheriff & (CustomGameOptions.showSheriff | this == PlayerController.getLocalPlayer()))
+            if (isOberon & (CustomGameOptions.showOberon | this == PlayerController.getLocalPlayer()))
             {
                 playerdata.nameText.Color = new Color(48 / 255.0f, 223 / 255.0f, 48 / 255.0f);
 

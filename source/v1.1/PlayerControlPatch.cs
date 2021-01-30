@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using UnhollowerBaseLib;
 using UnityEngine;
 
-namespace SheriffMod
+namespace AvalonMod
 {
     enum CustomRPC
     {
 
-        SetSheriff = 40,
+        SetOberon = 40,
         SyncCustomSettings = 41,
-        SheriffKill = 42
+        OberonKill = 42
 
     }
     enum RPC
@@ -60,7 +60,7 @@ namespace SheriffMod
     public static class PlayerControlPatch
     {
         public static FFGALNAPKCD closestPlayer = null;
-        public static FFGALNAPKCD Sheriff;
+        public static FFGALNAPKCD Oberon;
         public static DateTime lastKilled;
         [HarmonyPatch(typeof(FFGALNAPKCD), "HandleRpc")]
         public static void Postfix(byte HKHMBLJFLMC, MessageReader ALMCIJKELCP)
@@ -70,16 +70,16 @@ namespace SheriffMod
                 switch (HKHMBLJFLMC)
                 {
 
-                    case (byte)CustomRPC.SetSheriff:
+                    case (byte)CustomRPC.SetOberon:
                         {
 
-                            byte SheriffId = ALMCIJKELCP.ReadByte();
+                            byte OberonId = ALMCIJKELCP.ReadByte();
                             foreach (FFGALNAPKCD player in FFGALNAPKCD.AllPlayerControls)
                             {
-                                if (player.PlayerId == SheriffId)
+                                if (player.PlayerId == OberonId)
                                 {
-                                    Sheriff = player;
-                                    if (CustomGameOptions.showSheriff)
+                                    Oberon = player;
+                                    if (CustomGameOptions.showOberon)
                                     {
                                         player.nameText.Color = new Color(1, (float)(204.0 / 255.0), 0, 1);
                                     }
@@ -89,15 +89,15 @@ namespace SheriffMod
                         }
                     case (byte)CustomRPC.SyncCustomSettings:
                         {
-                            CustomGameOptions.showSheriff = ALMCIJKELCP.ReadBoolean();
-                            CustomGameOptions.SheriffKillCD = System.BitConverter.ToSingle(ALMCIJKELCP.ReadBytes(4).ToArray(), 0);
+                            CustomGameOptions.showOberon = ALMCIJKELCP.ReadBoolean();
+                            CustomGameOptions.OberonKillCD = System.BitConverter.ToSingle(ALMCIJKELCP.ReadBytes(4).ToArray(), 0);
                             break;
                         }
-                    case (byte)CustomRPC.SheriffKill:
+                    case (byte)CustomRPC.OberonKill:
                         {
                             FFGALNAPKCD killer = PlayerControlPatch.getPlayerById(ALMCIJKELCP.ReadByte());
                             FFGALNAPKCD target = PlayerControlPatch.getPlayerById(ALMCIJKELCP.ReadByte());
-                            if (PlayerControlPatch.isSheriff(killer))
+                            if (PlayerControlPatch.isOberon(killer))
                             {
                                 killer.MurderPlayer(target);
                             }
@@ -106,14 +106,14 @@ namespace SheriffMod
                 }
             }
             catch (Exception e) {
-                SheriffMod.log.LogInfo("RPC error... possible reasons: Not all players in the lobby have installed the mod or Sheriff mod versions do not match");
+                OberonMod.log.LogInfo("RPC error... possible reasons: Not all players in the lobby have installed the mod or Oberon mod versions do not match");
             }
         }
 
-        public static bool isSheriff(FFGALNAPKCD player)
+        public static bool isOberon(FFGALNAPKCD player)
         {
-            if (Sheriff == null) return false;
-            return player.PlayerId == Sheriff.PlayerId;
+            if (Oberon == null) return false;
+            return player.PlayerId == Oberon.PlayerId;
         }
 
         public static FFGALNAPKCD getPlayerById(byte id)
@@ -128,12 +128,12 @@ namespace SheriffMod
             }
             return null;
         }
-        public static float SheriffKillTimer()
+        public static float OberonKillTimer()
         {
             if (lastKilled == null) return 0;
             DateTime now = DateTime.UtcNow;
             TimeSpan diff = now - lastKilled;
-            var KillCoolDown = CustomGameOptions.SheriffKillCD * 1000.0f;
+            var KillCoolDown = CustomGameOptions.OberonKillCD * 1000.0f;
             if (KillCoolDown - (float)diff.TotalMilliseconds < 0) return 0;
             else
             {
@@ -155,7 +155,7 @@ namespace SheriffMod
                 foreach (EGLJNOMOGNP.DCJMABDDJCF infected in infection)
                 {
 
-                    if (player.PlayerId == infected.LAOEJKHLKAI.PlayerId)
+                    if (player.PlayerId == infected.LAOEJKHLKAI.PlayerId || player.PlayerId == Oberon.PlayerId)
                     {
                         isInfected = true;
 
@@ -184,7 +184,7 @@ namespace SheriffMod
                 if (player.PlayerId != refplayer.PlayerId)
                 {
 
-                    double dist = getDistBetweenPlayers(player, refplayer);
+                    double dist = getDistBetweenPlayersHeuristic(player, refplayer);
                     if (dist < mindist)
                     {
                         mindist = dist;
@@ -198,12 +198,12 @@ namespace SheriffMod
 
         }
 
-        public static double getDistBetweenPlayers(FFGALNAPKCD player, FFGALNAPKCD refplayer)
+        public static double getDistBetweenPlayersHeuristic(FFGALNAPKCD player, FFGALNAPKCD refplayer)
         {
             var refpos = refplayer.GetTruePosition();
             var playerpos = player.GetTruePosition();
 
-            return Math.Sqrt((refpos[0] - playerpos[0]) * (refpos[0] - playerpos[0]) + (refpos[1] - playerpos[1]) * (refpos[1] - playerpos[1]));
+            return (refpos[0] - playerpos[0]) * (refpos[0] - playerpos[0]) + (refpos[1] - playerpos[1]) * (refpos[1] - playerpos[1]);
         }
 
         [HarmonyPatch(typeof(FFGALNAPKCD), "RpcSetInfected")]
@@ -211,20 +211,20 @@ namespace SheriffMod
         {
 
 
-            MessageWriter writer = FMLLKEACGIO.Instance.StartRpcImmediately(FFGALNAPKCD.LocalPlayer.NetId, (byte)CustomRPC.SetSheriff, Hazel.SendOption.None, -1);
+            MessageWriter writer = FMLLKEACGIO.Instance.StartRpcImmediately(FFGALNAPKCD.LocalPlayer.NetId, (byte)CustomRPC.SetOberon, Hazel.SendOption.None, -1);
             List<FFGALNAPKCD> crewmates = getCrewMates(JPGEIBIBJPJ);
 
      
 
             System.Random r = new System.Random();
-            Sheriff = crewmates[r.Next(0, crewmates.Count)];
-            if (CustomGameOptions.showSheriff)
+            Oberon = crewmates[r.Next(0, crewmates.Count)];
+            if (CustomGameOptions.showOberon)
             {
-                Sheriff.nameText.Color = new Color(1, (float)(204.0 / 255.0), 0, 1);
+                Oberon.nameText.Color = new Color(1, (float)(204.0 / 255.0), 0, 1);
             }
-            byte SheriffId = Sheriff.PlayerId;
+            byte OberonId = Oberon.PlayerId;
 
-            writer.Write(SheriffId);
+            writer.Write(OberonId);
 
             FMLLKEACGIO.Instance.FinishRpcImmediately(writer);
 
@@ -233,9 +233,9 @@ namespace SheriffMod
         [HarmonyPatch(typeof(FFGALNAPKCD), "MurderPlayer")]
         public static bool Prefix(FFGALNAPKCD __instance, FFGALNAPKCD CAKODNGLPDF)
         {
-            if (Sheriff != null)
+            if (Oberon != null)
             {
-                if (__instance.PlayerId == Sheriff.PlayerId)
+                if (__instance.PlayerId == Oberon.PlayerId)
                 {
                     __instance.NDGFFHMFGIG.DAPKNDBLKIA = true;
 
@@ -248,9 +248,9 @@ namespace SheriffMod
         public static void Postfix(FFGALNAPKCD __instance, FFGALNAPKCD CAKODNGLPDF)
         {
 
-            if (Sheriff != null)
+            if (Oberon != null)
             {
-                if (__instance.PlayerId == Sheriff.PlayerId)
+                if (__instance.PlayerId == Oberon.PlayerId)
                 {
 
                     __instance.NDGFFHMFGIG.DAPKNDBLKIA = false;
@@ -270,8 +270,8 @@ namespace SheriffMod
             {
                 MessageWriter writer = FMLLKEACGIO.Instance.StartRpcImmediately(FFGALNAPKCD.LocalPlayer.NetId, (byte)CustomRPC.SyncCustomSettings, Hazel.SendOption.None, -1);
 
-                writer.Write(CustomGameOptions.showSheriff);
-                writer.Write(CustomGameOptions.SheriffKillCD);
+                writer.Write(CustomGameOptions.showOberon);
+                writer.Write(CustomGameOptions.OberonKillCD);
                 FMLLKEACGIO.Instance.FinishRpcImmediately(writer);
             }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 
 
-namespace SheriffMod
+namespace AvalonMod
 {
     class PlayerController
     {
@@ -45,11 +45,11 @@ namespace SheriffMod
             }
             return null;
         }
-        public static Player getSheriff()
+        public static Player getOberon()
         {
             foreach (Player player in players)
             {
-                if (player.isSheriff)
+                if (player.isOberon)
                 {
                     return player;
                 }

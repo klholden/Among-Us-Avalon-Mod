@@ -13,13 +13,13 @@ using UnityEngine;
 
 
 
-namespace SheriffMod
+namespace AvalonMod
 {
     [HarmonyPatch(typeof(PHCKLDDNJNP))]
     public static class GameOptionMenuPatch
     {
-        public static BCLDBBKFJPK showSheriffOption;
-        public static PCGDGFIAJJI SheriffCooldown;
+        public static BCLDBBKFJPK showOberonOption;
+        public static PCGDGFIAJJI OberonCooldown;
 
 
         [HarmonyPostfix]
@@ -30,26 +30,26 @@ namespace SheriffMod
             {
                
                     BCLDBBKFJPK showAnonymousvote = GameObject.FindObjectsOfType<BCLDBBKFJPK>().ToList().Where(x => x.TitleText.Text == "Anonymous Votes").First();
-                    showSheriffOption = GameObject.Instantiate(showAnonymousvote);
+                    showOberonOption = GameObject.Instantiate(showAnonymousvote);
 
-                    showSheriffOption.TitleText.Text = "Show Sheriff";
+                    showOberonOption.TitleText.Text = "Show Oberon";
 
-                    showSheriffOption.NHLMDAOEOAE = CustomGameOptions.showSheriff;
-                    showSheriffOption.CheckMark.enabled = CustomGameOptions.showSheriff;
+                    showOberonOption.NHLMDAOEOAE = CustomGameOptions.showOberon;
+                    showOberonOption.CheckMark.enabled = CustomGameOptions.showOberon;
 
                     PCGDGFIAJJI killcd = GameObject.FindObjectsOfType<PCGDGFIAJJI>().ToList().Where(x => x.TitleText.Text == "Kill Cooldown").First();
 
-                    SheriffCooldown = GameObject.Instantiate(killcd);
-                    SheriffCooldown.gameObject.name = "SheriffCDText";
-                    SheriffCooldown.TitleText.Text = "Sheriff Kill Cooldown";
-                    SheriffCooldown.Value = CustomGameOptions.SheriffKillCD;
-                    SheriffCooldown.ValueText.Text = CustomGameOptions.SheriffKillCD.ToString();
+                    OberonCooldown = GameObject.Instantiate(killcd);
+                    OberonCooldown.gameObject.name = "OberonCDText";
+                    OberonCooldown.TitleText.Text = "Oberon Kill Cooldown";
+                    OberonCooldown.Value = CustomGameOptions.OberonKillCD;
+                    OberonCooldown.ValueText.Text = CustomGameOptions.OberonKillCD.ToString();
 
 
                     LLKOLCLGCBD[] options = new LLKOLCLGCBD[__instance.KJFHAPEDEBH.Count + 2];
                     __instance.KJFHAPEDEBH.ToArray().CopyTo(options, 0);
-                    options[options.Length - 2] = showSheriffOption;
-                    options[options.Length - 1] = SheriffCooldown;
+                    options[options.Length - 2] = showOberonOption;
+                    options[options.Length - 1] = OberonCooldown;
                     __instance.KJFHAPEDEBH = new Il2CppReferenceArray<LLKOLCLGCBD>(options);
                 
             }
@@ -60,9 +60,9 @@ namespace SheriffMod
         public static void Postfix2(PHCKLDDNJNP __instance)
         {
             BCLDBBKFJPK showAnonymousvote = GameObject.FindObjectsOfType<BCLDBBKFJPK>().ToList().Where(x => x.TitleText.Text == "Anonymous Votes").First();
-            if (SheriffCooldown != null & showSheriffOption != null){
-                showSheriffOption.transform.position = showAnonymousvote.transform.position - new Vector3(0, 5.5f, 0);
-                SheriffCooldown.transform.position = showAnonymousvote.transform.position - new Vector3(0, 6f, 0);
+            if (OberonCooldown != null & showOberonOption != null){
+                showOberonOption.transform.position = showAnonymousvote.transform.position - new Vector3(0, 5.5f, 0);
+                OberonCooldown.transform.position = showAnonymousvote.transform.position - new Vector3(0, 6f, 0);
             }
 
         }
@@ -74,13 +74,13 @@ namespace SheriffMod
         public static bool Prefix(BCLDBBKFJPK __instance)
         {
 
-            if (__instance.TitleText.Text == "Show Sheriff")
+            if (__instance.TitleText.Text == "Show Oberon")
             {
-                CustomGameOptions.showSheriff = !CustomGameOptions.showSheriff;
+                CustomGameOptions.showOberon = !CustomGameOptions.showOberon;
                 FFGALNAPKCD.LocalPlayer.RpcSyncSettings(FFGALNAPKCD.GameOptions);
 
-                __instance.NHLMDAOEOAE = CustomGameOptions.showSheriff;
-                __instance.CheckMark.enabled = CustomGameOptions.showSheriff;
+                __instance.NHLMDAOEOAE = CustomGameOptions.showOberon;
+                __instance.CheckMark.enabled = CustomGameOptions.showOberon;
                 return false;
 
             }
@@ -96,13 +96,13 @@ namespace SheriffMod
         [HarmonyPatch("Increase")]
         public static bool Prefix1(PCGDGFIAJJI __instance)
         {
-            if (__instance.TitleText.Text == "Sheriff Kill Cooldown")
+            if (__instance.TitleText.Text == "Oberon Kill Cooldown")
             {
-                CustomGameOptions.SheriffKillCD = Math.Min(CustomGameOptions.SheriffKillCD + 2.5f, 40);
+                CustomGameOptions.OberonKillCD = Math.Min(CustomGameOptions.OberonKillCD + 2.5f, 40);
                 FFGALNAPKCD.LocalPlayer.RpcSyncSettings(FFGALNAPKCD.GameOptions);
-                GameOptionMenuPatch.SheriffCooldown.NHLMDAOEOAE = CustomGameOptions.SheriffKillCD;
-                GameOptionMenuPatch.SheriffCooldown.Value = CustomGameOptions.SheriffKillCD;
-                GameOptionMenuPatch.SheriffCooldown.ValueText.Text = CustomGameOptions.SheriffKillCD.ToString();
+                GameOptionMenuPatch.OberonCooldown.NHLMDAOEOAE = CustomGameOptions.OberonKillCD;
+                GameOptionMenuPatch.OberonCooldown.Value = CustomGameOptions.OberonKillCD;
+                GameOptionMenuPatch.OberonCooldown.ValueText.Text = CustomGameOptions.OberonKillCD.ToString();
                 return false;
             }
 
@@ -113,14 +113,14 @@ namespace SheriffMod
         [HarmonyPatch("Decrease")]
         public static bool Prefix2(PCGDGFIAJJI __instance)
         {
-            if (__instance.TitleText.Text == "Sheriff Kill Cooldown")
+            if (__instance.TitleText.Text == "Oberon Kill Cooldown")
             {
-                CustomGameOptions.SheriffKillCD = Math.Max(CustomGameOptions.SheriffKillCD - 2.5f, 10);
+                CustomGameOptions.OberonKillCD = Math.Max(CustomGameOptions.OberonKillCD - 2.5f, 10);
 
                 FFGALNAPKCD.LocalPlayer.RpcSyncSettings(FFGALNAPKCD.GameOptions);
-                GameOptionMenuPatch.SheriffCooldown.NHLMDAOEOAE = CustomGameOptions.SheriffKillCD;
-                GameOptionMenuPatch.SheriffCooldown.Value = CustomGameOptions.SheriffKillCD;
-                GameOptionMenuPatch.SheriffCooldown.ValueText.Text = CustomGameOptions.SheriffKillCD.ToString();
+                GameOptionMenuPatch.OberonCooldown.NHLMDAOEOAE = CustomGameOptions.OberonKillCD;
+                GameOptionMenuPatch.OberonCooldown.Value = CustomGameOptions.OberonKillCD;
+                GameOptionMenuPatch.OberonCooldown.ValueText.Text = CustomGameOptions.OberonKillCD.ToString();
 
 
                 return false;

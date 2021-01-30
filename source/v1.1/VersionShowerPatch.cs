@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SheriffMod
+namespace AvalonMod
 {
     [HarmonyPatch(typeof(BOCOFLHKCOJ), "Start")]
     public static class VersionShowerPatch
@@ -13,7 +13,7 @@ namespace SheriffMod
         // Methods
         public static void Postfix(BOCOFLHKCOJ __instance)
         {
-            __instance.text.Text += "\nloaded Sheriff Mod v1.1 by Woodi ";
+            __instance.text.Text += "\nloaded Avalon Mod v1.1 by lynnmakes ";
 
 
 
